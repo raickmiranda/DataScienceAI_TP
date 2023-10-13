@@ -1,0 +1,217 @@
+\documentclass[sigchi]{acmart}
+
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    \normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
+
+\begin{document}
+
+%%
+%% The "title" command has an optional parameter,
+%% allowing the author to define a "short title" to be used in page headers.
+\title{Censo Estadunidense: Abordagens de Classificação}
+
+\author{Lucas Camarino}
+\email{lcealmeida@sga.pucminas.br}
+\affiliation{%
+  \institution{Pontifícia Universidade Católica de Minas Gerais}
+  \city{Belo Horizonte}
+  \state{Minas Gerais}
+  \country{Brasil}
+}
+
+\author{Maria Luiza Lenti}
+\email{maria.lenti@sga.pucminas.br}
+\affiliation{%
+  \institution{Pontifícia Universidade Católica de Minas Gerais}
+  \city{Belo Horizonte}
+  \state{Minas Gerais}
+  \country{Brasil}
+}
+
+\author{Nathália Mascarenhas}
+\email{nathalia.mascarenhas@sga.pucminas.br}
+\affiliation{%
+  \institution{Pontifícia Universidade Católica de Minas Gerais}
+  \city{Belo Horizonte}
+  \state{Minas Gerais}
+  \country{Brasil}
+}
+
+\author{Raick Miranda}
+\email{raick.miranda@sga.pucminas.br}
+\affiliation{%
+  \institution{Pontifícia Universidade Católica de Minas Gerais}
+  \city{Belo Horizonte}
+  \state{Minas Gerais}
+  \country{Brasil}
+}
+
+\author{Túlio Brant}
+\email{tbsguerra@sga.pucminas.br}
+\affiliation{%
+  \institution{Pontifícia Universidade Católica de Minas Gerais}
+  \city{Belo Horizonte}
+  \state{Minas Gerais}
+  \country{Brasil}
+}
+
+\maketitle
+
+\section{Introdução}
+\label{sec:introducao}
+
+A análise da distribuição de renda em uma sociedade desempenha um papel crucial na compreensão das disparidades econômicas e na formulação de políticas públicas voltadas para a igualdade financeira. A base de dados \emph{Adult Census Income}\cite{census:1994} é uma fonte rica de informações demográficas e socioeconômicas de indivíduos dos Estados Unidos, que permite a investigação de fatores determinantes na renda dessas pessoas. Este estudo tem como objetivo aplicar um algoritmo de classificação a fim de classificar as pessoas em duas categorias: aquelas que ganham anualmente menos ou igual a US\$50,000 e aquelas que ganham mais de US\$50,000.
+
+O interesse primordial desta análise são indivíduos classificados na categoria de renda <=\$50k. O foco na categoria de renda mais baixa é motivado pela necessidade de identificar as principais variáveis demográficas e socioeconômicas que contribuem para essa situação.
+
+O restante desta análise está organizada da seguinte forma: na seção \ref{sec:desc}, será descrita detalhadamente a base escolhida, apresentando as instâncias, atributos e quais os
+valores que cada atributo assume. Na seção \ref{sec:preproc}, serão apresentadas todas as etapas de pré-processamento utilizadas e os métodos escolhidos. Por fim, na seção \ref{sec:result}, serão apresentados os resultados da análise e a discussão das principais descobertas. 
+não
+\section{Descrição da Base de Dados}
+\label{sec:desc}
+O conjunto de dados escolhido para análise é o \emph{Adult Census Income}, que é composto por 14 atributos e um total de 32.561 instâncias. O principal objetivo deste conjunto de dados é realizar a previsão de se a renda de um indivíduo excede US\$50 mil por ano com base em informações demográficas e socioeconômicas coletadas no censo.
+
+Cada registo contém as seguintes informações sobre um indivíduo:
+\begin{itemize}
+    \item \textbf{\emph{Age}}: Idade do Indivíduo.
+    \begin{itemize}
+        \item Numérico.
+    \end{itemize}
+    \item \textbf{\emph{Workclass}}: Classe de trabalho do indivíduo.
+    \begin{itemize}
+        \item \emph{Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local-gov, State-gov, Without-pay, Never-worked}.
+    \end{itemize}
+    \item \textbf{\emph{Final Weight}}: O número de pessoas que o censo acredita que o registo representa.
+    \begin{itemize}
+        \item Numérico.
+    \end{itemize}
+    \item \textbf{\emph{Education}}: Grau de instrução do indivíduo.
+    \begin{itemize}
+        \item Categórico ordinal.
+    \end{itemize}
+    \item \textbf{\emph{Education-num}}: Mais alto nível de escolaridade alcançado.
+    \begin{itemize}
+        \item Numérico.
+    \end{itemize}
+    \item \textbf{\emph{Marital status}}: Estado civil do indivíduo.
+    \begin{itemize}
+        \item Categórico nominal.
+    \end{itemize}
+    \item \textbf{\emph{Occupation}}: Profissão do indivíduo.
+    \begin{itemize}
+        \item Categórico nominal.
+    \end{itemize}
+    \item \textbf{\emph{Relationship}}: A relação familiar em relação aos outros.
+    \begin{itemize}
+        \item \emph{Wife, Own-child, Husband, Not-in-family, Other-relative, Unmarried}.
+    \end{itemize}
+    \item \textbf{\emph{Race}}: Descrições da raça de um indivíduo.
+    \begin{itemize}
+        \item Categórico nominal.
+    \end{itemize}
+    \item \textbf{\emph{Sex}}: Sexo biológico do indivíduo.
+    \begin{itemize}
+        \item Categórico.
+    \end{itemize}
+    \item \textbf{\emph{Capital-gain}}: Ganho de capital para um indivíduo.
+    \begin{itemize}
+        \item Numérico.
+    \end{itemize}
+    \item \textbf{Capital-loss}: Perda de capital para um indivíduo.
+    \begin{itemize}
+        \item Numérico.
+    \end{itemize}
+    \item \textbf{\emph{Hours-per-week}}: Horas de trabalho do indivíduo por semana.
+    \begin{itemize}
+        \item Contínuo.
+    \end{itemize}
+    \item \textbf{\emph{Native country}}: País de origem do indivíduo.
+    \begin{itemize}
+        \item Categórico nominal.
+    \end{itemize}
+    \item \textbf{\emph{Income} (rótulo)}: Se o indivíduo ganha ou não mais de 50k anualmente.
+    \begin{itemize}
+        \item <=50k ou >50k.
+    \end{itemize}
+\end{itemize}
+
+\section{Etapas de pré-processamento}
+\label{sec:preproc}
+
+Foram utilizadas duas etapas de pré-processamento, conversão numérica e balanceamento dos dados. A Figura \ref{fig:etapas} representa a ordem das etapas de pré-processamento utilizadas. Primeiramente os dados foram convertidos para numérico, depois foi feita a divisão entre teste e treino e, por fim, o balanceamento dos dados.
+
+\begin{figure} [b]
+    \centering
+    \includegraphics[width=0.4\textwidth]{etapas.png}
+    \caption{Ordem das Etapas de Pré-processamento}
+    \label{fig:etapas}
+\end{figure}
+
+\subsection{Conversão Numérica}
+A base de dados utilizada possui atributos categórico/nominais, dessa forma é necessário converter esses dados para valores numéricos. Os dados convertidos foram: 
+\begin{itemize}
+ \item Work class
+ \item Education
+ \item Marital status
+ \item Occupation
+ \item Relationship
+ \item Race
+ \item Sex
+ \item Native country
+\end{itemize}
+Primeiro, foram identificadas colunas categóricas no conjunto de dados que precisavam ser tratadas. Em seguida, para cada uma dessas colunas, foi utilizada a técnica \emph{Label Encoding} (Codificação de Rótulo). Isso significa que um número único foi atribuído a cada categoria dentro dessas colunas, de forma que os dados agora pudessem ser representados numericamente.
+
+Após a codificação de rótulos, foi aplicada a técnica \emph{One-Hot Encoding} usando o \emph{ColumnTransformer}. Essa técnica transforma as colunas categóricas em um conjunto de colunas binárias (0 ou 1) para representar a presença ou ausência de cada categoria. Isso é feito para evitar que o modelo de aprendizado de máquina interprete erroneamente relações ordinais entre as categorias.
+
+
+\subsection{Divisão Teste e Treino}
+A divisão entre teste e treinamento foi feita antes do balanceamento. Foi utilizada a biblioteca \texttt{sklearn.model\_selection}, que contém a função \texttt{train\_test\_split}. O tamanho escolhido para teste foi de 15\%, ou seja, 85\% das instâncias foram utilizadas para treino.
+
+\subsection{Balanceameneto dos Dados}
+O balanceamento de dados foi utilizado, já que no total, 24.720 dos indivíduos foram classificados como <=50k e somente 7.841 foram classificados como >50k. 
+Foram utilizados 4 diferentes métodos de balanceamento, dois métodos \emph{Over sampling} e dois \emph{Under sampling}.
+
+Primeiro foi utilizado o método \emph{Random Over Sampling}, ele gera novas amostras da classe minoritária por meio de reposição de amostras. Também como método \emph{Over}, foi utilizado o \emph{Smote}, que ao invés de gerar novas amostras aleátoriamente, seleciona cada amostra da classe minoritária e introduz dados sintéticos que conectam a amostra minoritária com seus vizinhos mais próximos. Os vizinhos dos k vizinhos mais próximos são escolhidos aleatóriamente.
+
+Os métodos \emph{Under} foram o \emph{Random Under Sampling}, que deleta amostras aleatórias da classe maioritária, e o \emph{NearMiss}, que utiliza KNN para readuzir as amostras. Existem 3 versões de algoritmos \emph{NearMiss}:
+\begin{enumerate}
+ \item Seleciona as amostras positivas para quais a distância média para as N amostras mais próximas da classe minoritária for menor.
+\item Seleciona as amostras positivas para quais a distância média para as N amostras mais distantes da classe minoritária for menor.
+ \item É dividido em dois passos. Primeiro, para cada amostra negativa, seus M vizinhos mais próximos são mantidos, depois, as amostras positivas selecionadas são as quais a distância média para os N vizinhos mais próximos for a maior.
+\end{enumerate}
+
+Para este estudo, os métodos \emph{Over} são mais interessantes, visto que aumentarão a quantidade de indivíduos com >50k e manterá as mesmas instâncias para os classificados como <=50k, deixando-as mais completas. Contudo, serão discutidos os resultados de todos os métodos para a avaliação.
+
+\section{Resultados e discussões}
+\label{sec:result}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{metricas.png}
+    \caption{Métricas de Avaliação Com e Sem Balanceamento}
+    \label{fig:metricas}
+\end{figure}
+
+O algoritmo utilizado para classificação foi o \emph{CART},  um dos algoritmos mais comuns para a construção de árvores de decisão em problemas de classificação e regressão. A Figura \ref{fig:metricas} apresenta as métricas de avaliação da árvore sem balanceamento e com os 4 tipos diferentes de balanceamento.
+
+Com relação aos valores de \emph{Recall}, que mede a proporção de exemplos positivos que foram corretamente classificados pelo modelo, os melhores resultados, tanto para instâncias classificadas como <=50k, quanto para >50k, foram do \emph{Random Under Sampling} e do \emph{Random Over Sampling}, com \emph{recall} maior que 0.7 nos dois casos. Essa métrica é essencial para esta análise, já que o foco é analisar todos os indivíduos que possuem renda <=50k, mesmo que algumas pessoas que recebam mais também sejam examinadas, ou seja, a taxa de falsos negativos deve ser baixa. Olhando apenas para os valores, a árvore sem balanceamento apresentou um melhor resultado, com \emph{recall} igual a 0.95, no entanto, como a quantidade de amostras é muito distinta, essa árvore foi descartada, restando o resultado da \emph{NearMiss} com 0.86.
+
+Observa-se que, com relação a precisão, que mede a proporção de exemplos classificados como positivos pelo modelo que são realmente positivos, os melhores resultados foram o \emph{Random Under Sampling} e o \emph{Random Over Sampling}, que obtiveram boas precisões, tanto para <=50k, quanto para >50k, diferente dos outros, que ofereceram resultados muito bons para um, e ruins para o outro. Como o atributo mais interessante para o objetivo da análise é o <=50k, o melhor resultado foi o obtido pelo \emph{Smote}, que apresentou maior precisão, porém, caso não fosse, os melhores seriam os do \emph{Random Under Sampling} e \emph{Random Over Sampling}, já que a árvore desbalanceada é desconsiderada.
+
+Na métrica \emph{F-Measure}, que é a média harmônica entre precisão e \emph{recall}, os melhores resultados foram os do \emph{Random Under Sampling} e \emph{Random Over Sampling}, que apresentaram resultados iguais a 0.87.
+
+Em suma, todas as árvores, balanceadas ou não, apresentaram melhor resultado para instâncias classificadas como <=50k, que é mais relevante, em comparação com as que foram classificadas como >50k. As melhores métricas para a opção mais relevante foram as do \emph{Random Under Sampling} e \emph{Random Over Sampling}, com foco no \emph{recall}, que é muito importante para esta análise.
+
+Por fim, para escolher o melhor método de balanceamento, foi levado em consideração o fato de estratégias de \emph{Over Sampling} influenciarem apenas na classe minoritária e as de \emph{Under Sampling} na classe maioritária, optando por descartar o \emph{Random Under Sampling} e \emph{NearMiss} e selecionar o \emph{Random Over Sampling} para garantir mais informações da classe relevante.
+
+\section{Códigos Desenvolvidos}
+\url{https://github.com/raickmiranda/DataScienceAI_TP.git}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{acmart}
+
+\end{document}
+\endinput
